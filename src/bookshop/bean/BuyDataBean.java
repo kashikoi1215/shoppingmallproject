@@ -2,7 +2,7 @@ package bookshop.bean;
 
 import java.sql.Timestamp;
 
-public class BuyDateBean {
+public class BuyDataBean {
 	private String buy_id; // 구매 아이디
 	private String buyer; // 구매자
 	private int book_id; // 구매된 책 아이디

@@ -12,7 +12,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.sql.DataSource;
 
-import com.sun.org.glassfish.external.statistics.TimeStatistic;
 
 public class BuyDBBean {
 	private static BuyDBBean instance = new BuyDBBean();
@@ -65,14 +64,14 @@ public class BuyDBBean {
 	
 	// 구매 테이블인 buy에 구매 목록 등록
 	@SuppressWarnings("resource")
-	public void insertBuy(List<CartDataBean>) lists,
+	public void insertBuy(List<CartDataBean> lists,
 		String id, String account, String deliveryName, String deliveryTel,
 		String deliveryAddress) throws Exception{
 			
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		java.security.Timestamp reg_date = null;
+		Timestamp reg_date = null;
 		String sql = "";
 		String maxDate = " ";
 		String number = "";
@@ -125,10 +124,10 @@ public class BuyDBBean {
 				pstmt.setLong(1, buyId);
 				pstmt.setString(2, id);
 				pstmt.setInt(3, cart.getBook_id());
-				pstmt.setString(4, cart.getBuy_title());
+				pstmt.setString(4, cart.getBook_title());
 				pstmt.setInt(5, cart.getBuy_price());
-				pstmt.setString(6, cart.getBuy_count());
-				pstmt.setString(7, getBook_image());
+				pstmt.setInt(6, cart.getBuy_count());
+				pstmt.setString(7, cart.getBook_image());
 				pstmt.setTimestamp(8, reg_date);
 				pstmt.setString(9, account);
 				pstmt.setString(10, deliveryName);
@@ -137,9 +136,9 @@ public class BuyDBBean {
 				pstmt.executeUpdate();
 				
 				// 상품이 구매되었으므로 book 테이블의 상품 수량을 재조정함
-				psmt = conn.prepareStatement
+				pstmt = conn.prepareStatement
 						("select book_count from book where book_id=?");
-				pstmt.setInt(1, cart.getBook_id);
+				pstmt.setInt(1, cart.getBook_id());
 				rs = pstmt.executeQuery();
 				rs.next();
 				
@@ -261,7 +260,7 @@ public class BuyDBBean {
 			while(rs.next()) {
 				buy = new BuyDataBean();
 				
-				buy.setBuy_id(rs.getLong("buy_id"));
+				buy.setBuy_id(rs.getString("buy_id"));
 				buy.setBook_id(rs.getInt("book_id"));
 				buy.setBook_title(rs.getString("book_title"));
 				buy.setBuy_price(rs.getInt("buy_price"));
@@ -306,7 +305,7 @@ public class BuyDBBean {
 			while(rs.next()) {
 				buy = new BuyDataBean();
 				
-				buy.setBuy_id(rs.getLong("buy_id"));
+				buy.setBuy_id(rs.getString("buy_id"));
 				buy.setBuyer(rs.getString("buyer"));
 				buy.setBook_id(rs.getInt("book_id"));
 				buy.setBook_title(rs.getString("book_title"));
